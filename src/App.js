@@ -1,6 +1,7 @@
 // 导入路由
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import {Route, Routes } from 'react-router-dom'
 // 导入页面组件
+import { history } from './utils/history'
 import Layout from './pages/Layout'
 import Login from '@/pages/Login'
 import '@/App.css'
@@ -8,10 +9,11 @@ import { AuthRoute } from './components/AuthRoute'
 import Article from './pages/Article'
 import Home from './pages/Home'
 import Publish from './pages/Publish'
+import { unstable_HistoryRouter as HistoryRouter } from 'react-router-dom'
 // 配置路由规则
 function App() {
   return (
-    <BrowserRouter>
+    <HistoryRouter history={history}>
       <div className="App">
         <Routes>
             {/*需要鉴权*/}
@@ -27,7 +29,7 @@ function App() {
             <Route path="/login" element={<Login/>}/>
         </Routes>
       </div>
-    </BrowserRouter>
+    </HistoryRouter>
   )
 }
 
