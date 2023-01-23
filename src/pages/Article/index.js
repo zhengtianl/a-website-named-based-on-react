@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom'
-import { Card, Breadcrumb, Form, Button, Radio, DatePicker, Select } from 'antd'
+import { Link, useNavigate } from 'react-router-dom'
+import { Card, Breadcrumb, Form, Button, Radio, DatePicker, Select, Popconfirm } from 'antd'
 import locale from 'antd/es/date-picker/locale/zh_CN'
 import { Table, Tag, Space } from 'antd'
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
@@ -7,6 +7,7 @@ import img404 from '@/assets/error.png'
 import './index.scss'
 import { useEffect, useState } from 'react'
 import { http } from '@/utils'
+
 
 
 const { Option } = Select
@@ -69,7 +70,14 @@ const Article = () => {
     })
 }
   
-
+  //删除
+  const delArticle= async (data) =>{
+    await http.delete(`/mp/articles/${data.id}`)
+    setParams({
+      page: 1,
+      per_page: 10
+    })
+  }
   
   const columns = [
     {
@@ -111,21 +119,41 @@ const Article = () => {
       render: data => {
         return (
           <Space size="middle">
-            <Button type="primary" shape="circle" icon={<EditOutlined />} />
-            <Button
+              <Button
               type="primary"
-              danger
               shape="circle"
-              icon={<DeleteOutlined />}
-            />
+              icon={<EditOutlined />}
+              onClick={() => goPublish(data)} />
+            
+            <Popconfirm
+              title="确认删除该条文章吗?"
+              onConfirm={() => delArticle(data)}
+              okText="确认"
+              cancelText="取消"
+            >
+              <Button
+                type="primary"
+                danger
+                shape="circle"
+                icon={<DeleteOutlined />}
+              />
+            </Popconfirm>
           </Space>
         )
       }
     }
   ]
-  
+  const pageChange =(page) =>{
+    setParams({
+      ...params,
+      page
+    })
+  }
 
-
+  const navigate = useNavigate()
+  const goPublish = (data) => {
+    navigate(`/publish?id=${data.id}`)
+  }
 
   return (
     <div>
@@ -176,7 +204,11 @@ const Article = () => {
       </Card>
       {/*文章表区*/}
       <Card title={`根据筛选条件共查询到 ${atrticles.count} 条结果：`}>
-        <Table rowKey="id" columns={columns} dataSource={atrticles.list} />
+        <Table rowKey="id" 
+        columns={columns} 
+        dataSource={atrticles.list} 
+        pagination={{pageSize:params.per_page, total:atrticles.count, onChange: pageChange}} />
+      
       </Card>
     </div>
   )
