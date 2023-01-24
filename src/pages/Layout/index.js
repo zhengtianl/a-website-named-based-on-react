@@ -14,10 +14,13 @@ const { Header, Sider } = Layout
 
 const GeekLayout = () => {
   const { pathname } = useLocation()
-  const { userStore, loginStore } = useStore()
+  const { userStore, loginStore, channelStore } = useStore()
   const navigate = useNavigate()
   //console.log(pathname)
-  useEffect(() => {userStore.getUserInfo()}, [userStore])
+  useEffect(() => {
+    userStore.getUserInfo() 
+    channelStore.loadChannelList()
+   }, [userStore,channelStore])
   const confirm = () => {
     //退出登录
     //删除token

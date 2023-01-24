@@ -7,23 +7,14 @@ import img404 from '@/assets/error.png'
 import './index.scss'
 import { useEffect, useState } from 'react'
 import { http } from '@/utils'
-
-
-
+import { useStore } from '@/store'
+import { observer } from 'mobx-react-lite'
 const { Option } = Select
 const { RangePicker } = DatePicker
 
 const Article = () => {
   //频道管理列表
-  const [channels, setchannelList] = useState([])
-  const  loadChannelList = async () =>{
-    const  res = await http.get('/channels')
-    setchannelList(res.data.channels)
-  }
- 
-  useEffect(() => {
-    loadChannelList()},[]
-  )
+  const {channelStore} = useStore()
   //文章列表管理
   const [atrticles, setList] = useState({
     list:[],//文章列表
@@ -184,7 +175,7 @@ const Article = () => {
               placeholder="请选择文章频道"
               style={{ width: 120 }}
             >
-              {channels.map(item => (
+              {channelStore.channelList.map(item => (
               <Option key={item.id} value={item.id}>
               {item.name}</Option>))}
             </Select>
@@ -214,4 +205,4 @@ const Article = () => {
   )
 }
 
-export default Article
+export default observer(Article)
