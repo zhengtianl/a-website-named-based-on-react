@@ -17,9 +17,11 @@
     "react-quill": "^2.0.0",
     "react-router-dom": "^6.6.2",
     "react-scripts": "5.0.1",
+    "source-map-explorer": "^2.5.3",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",
